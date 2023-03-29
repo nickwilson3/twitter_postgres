@@ -90,18 +90,7 @@ def insert_tweet(connection,tweet):
     You'll need to add appropriate SQL insert statements to get it to work.
     '''
 
-    # skip tweet if it's already inserted
-    sql=sqlalchemy.sql.text('''
-    SELECT id_tweets 
-    FROM tweets
-    WHERE id_tweets = :id_tweets
-    ''')
-    res = connection.execute(sql,{
-        'id_tweets':tweet['id'],
-        })
-    if res.first() is not None:
-        return
-
+    # skip tweet 
     # insert tweet within a transaction;
     # this ensures that a tweet does not get "partially" loaded
     with connection.begin() as trans:
@@ -114,6 +103,20 @@ def insert_tweet(connection,tweet):
         else:
             user_id_urls = get_id_urls(tweet['user']['url'], connection)
 
+        })
+
+        # skip tweet if it's already inserted
+    sql=sqlalchemy.sql.text('''
+    SELECT id_tweets 
+    FROM tweets
+    WHERE id_tweets = :id_tweets
+    ''')
+    res = connection.execute(sql,{
+        'id_tweets':tweet['id'],
+        })  
+    if res.first() is not None:
+        return
+    if res.first() is not None:
         # create/update the user
         sql = sqlalchemy.sql.text('''
             
@@ -129,7 +132,7 @@ def insert_tweet(connection,tweet):
             'id_urls':user_id_urls,
             'friends_count':tweet.get('friends_count', None),
             'listed_count':tweet.get('listed_count', None),
-            'favourites_count':tweet.get('favourites_count', None),
+            'favo   urites_count':tweet.get('favourites_count', None),
             'statuses_count':tweet.get('statuses_count', None),
             'protected':tweet.get('protected', None),
             'verified':tweet.get('verified', None),
