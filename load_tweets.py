@@ -106,19 +106,19 @@ def insert_tweet(connection,tweet):
         })
 
         # skip tweet if it's already inserted
-    sql=sqlalchemy.sql.text('''
-    SELECT id_tweets 
-    FROM tweets
-    WHERE id_tweets = :id_tweets
-    ''')
-    res = connection.execute(sql,{
-        'id_tweets':tweet['id'],
-        })  
-    if res.first() is not None:
-        return
-    if res.first() is not None:
-        # create/update the user
-        sql = sqlalchemy.sql.text('''
+        sql=sqlalchemy.sql.text('''
+        SELECT id_tweets 
+        FROM tweets
+        WHERE id_tweets = :id_tweets
+        ''')
+        res = connection.execute(sql,{
+            'id_tweets':tweet['id'],
+            })  
+        if res.first() is not None:
+            return
+        if res.first() is not None:
+            # create/update the user
+            sql = sqlalchemy.sql.text('''
             
         INSERT INTO users(
         id_users, created_at, updated_at, id_urls, friends_count, listed_count, favourites_count, statuses_count, protected, verified, screen_name, name, location, description, withheld_in_countries)
